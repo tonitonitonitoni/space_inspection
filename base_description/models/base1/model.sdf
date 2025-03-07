@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sdf version='1.9'>
+<!--This has six thrusters and no gravity-->
+  <model name='base'>
+    <link name='base_link'>
+      <gravity>false</gravity>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>60</mass>
+        <inertia>
+          <ixx>100</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>100</iyy>
+          <iyz>0</iyz>
+          <izz>100</izz>
+        </inertia>
+      </inertial>
+      <collision name='base_link_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1 1 1</size>
+          </box>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>100000</kp>
+              <kd>100000</kd>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+              <fdir1>0 0 1</fdir1>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='base_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+            <box>
+                <size>1 1 1</size>
+            </box>
+        </geometry>
+      </visual>
+    </link>
+
+    <!-- 0 : Move Left -->
+    <joint name='thruster_0_joint' type='fixed'>
+      <pose relative_to='base_link'>0 -0.5 0 -1.5708 0 0</pose>
+      <parent>base_link</parent>
+      <child>thruster_0</child>
+      <axis>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+      </axis>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+        </ode>
+      </physics>
+    </joint>
+    <link name='thruster_0'>
+      <gravity>false</gravity>
+      <pose relative_to='thruster_0_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>0.001</mass>
+        <inertia>
+          <ixx>1e-05</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1e-05</iyy>
+          <iyz>0</iyz>
+          <izz>1e-05</izz>
+        </inertia>
+      </inertial>
+      <visual name="thruster_0_visual">
+        <pose> 0 0 0 0 0 0 </pose>
+        <geometry>
+            <cylinder>
+                <length>0.25</length>
+                <radius>0.2</radius>
+            </cylinder>
+        </geometry>
+        <material>
+            <ambient>0.1 0.1 0.1 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+            <specular>0 0 0 0</specular>
+            <emissive>0 0 0 1</emissive>
+        </material>
+      </visual>
+    </link>
+    <plugin filename="gz-sim-spacecraft-thruster-model-system" name="gz::sim::systems::SpacecraftThrusterModel">
+      <link_name>thruster_0</link_name>
+      <actuator_number>0</actuator_number>
+      <duty_cycle_frequency>10</duty_cycle_frequency>
+      <max_thrust>1.4</max_thrust>
+      <sub_topic>command/duty_cycle</sub_topic>
+    </plugin>
+
+    <!--1: Move Right -->
+    <joint name='thruster_1_joint' type='fixed'>
+      <pose relative_to='base_link'>0 0.5 0 1.5708 0 0</pose>
+      <parent>base_link</parent>
+      <child>thruster_1</child>
+      <axis>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+      </axis>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+        </ode>
+      </physics>
+    </joint>
+    <link name='thruster_1'>
+      <gravity>false</gravity>
+      <pose relative_to='thruster_1_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>0.001</mass>
+        <inertia>
+          <ixx>1e-05</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1e-05</iyy>
+          <iyz>0</iyz>
+          <izz>1e-05</izz>
+        </inertia>
+      </inertial>
+      <visual name="thruster_1_visual">
+        <pose> 0 0 0 0 0 0 </pose>
+        <geometry>
+            <cylinder>
+                <length>0.25</length>
+                <radius>0.2</radius>
+            </cylinder>
+        </geometry>
+        <material>
+            <ambient>0.1 0.1 0.1 1</ambient>
+            <diffuse>0 1 0 1</diffuse>
+            <specular>0 0 0 0</specular>
+            <emissive>0 0 0 1</emissive>
+        </material>
+      </visual>
+    </link>
+    <plugin filename="gz-sim-spacecraft-thruster-model-system" name="gz::sim::systems::SpacecraftThrusterModel">
+      <link_name>thruster_1</link_name>
+      <actuator_number>1</actuator_number>
+      <duty_cycle_frequency>10</duty_cycle_frequency>
+      <max_thrust>1.4</max_thrust>
+      <sub_topic>command/duty_cycle</sub_topic>
+    </plugin>
+
+    <!--2: Move Forward -->
+    <joint name='thruster_2_joint' type='fixed'>
+      <pose relative_to='base_link'>0.5 0 0 0 -1.5708 0</pose>
+      <parent>base_link</parent>
+      <child>thruster_2</child>
+      <axis>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+      </axis>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+        </ode>
+      </physics>
+    </joint>
+    <link name='thruster_2'>
+      <gravity>false</gravity>
+      <pose relative_to='thruster_2_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>0.001</mass>
+        <inertia>
+          <ixx>1e-05</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1e-05</iyy>
+          <iyz>0</iyz>
+          <izz>1e-05</izz>
+        </inertia>
+      </inertial>
+      <visual name="thruster_2_visual">
+        <pose> 0 0 0 0 0 0 </pose>
+        <geometry>
+            <cylinder>
+                <length>0.25</length>
+                <radius>0.2</radius>
+            </cylinder>
+        </geometry>
+        <material>
+            <ambient>0.1 0.1 0.1 1</ambient>
+            <diffuse>0 0 1 1</diffuse>
+            <specular>0 0 0 0</specular>
+            <emissive>0 0 0 1</emissive>
+        </material>
+      </visual>
+    </link>
+    <plugin filename="gz-sim-spacecraft-thruster-model-system" name="gz::sim::systems::SpacecraftThrusterModel">
+      <link_name>thruster_2</link_name>
+      <actuator_number>2</actuator_number>
+      <duty_cycle_frequency>10</duty_cycle_frequency>
+      <max_thrust>1.4</max_thrust>
+      <sub_topic>command/duty_cycle</sub_topic>
+    </plugin>
+
+    <!--3. Move Backward-->
+    <joint name='thruster_3_joint' type='fixed'>
+      <pose relative_to='base_link'>-0.5 0 0 0 1.5708 0</pose>
+      <parent>base_link</parent>
+      <child>thruster_3</child>
+      <axis>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+      </axis>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+        </ode>
+      </physics>
+    </joint>
+    <link name='thruster_3'>
+      <gravity>false</gravity>
+      <pose relative_to='thruster_3_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>0.001</mass>
+        <inertia>
+          <ixx>1e-05</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1e-05</iyy>
+          <iyz>0</iyz>
+          <izz>1e-05</izz>
+        </inertia>
+      </inertial>
+      <visual name="thruster_3_visual">
+        <pose> 0 0 0 0 0 0 </pose>
+        <geometry>
+            <cylinder>
+                <length>0.25</length>
+                <radius>0.2</radius>
+            </cylinder>
+        </geometry>
+        <material>
+            <ambient>0.1 0.1 0.1 1</ambient>
+            <diffuse>0 1 1 1</diffuse>
+            <specular>0 0 0 0</specular>
+            <emissive>0 0 0 1</emissive>
+        </material>
+      </visual>
+    </link>
+    <plugin filename="gz-sim-spacecraft-thruster-model-system" name="gz::sim::systems::SpacecraftThrusterModel">
+      <link_name>thruster_3</link_name>
+      <actuator_number>3</actuator_number>
+      <duty_cycle_frequency>10</duty_cycle_frequency>
+      <max_thrust>1.4</max_thrust>
+      <sub_topic>command/duty_cycle</sub_topic>
+    </plugin>
+
+    <!--4. Move Up-->
+    <joint name='thruster_4_joint' type='fixed'>
+      <pose relative_to='base_link'>0 0 -0.5 0 0 1.5708 </pose>
+      <parent>base_link</parent>
+      <child>thruster_4</child>
+      <axis>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+      </axis>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+        </ode>
+      </physics>
+    </joint>
+    <link name='thruster_4'>
+      <gravity>false</gravity>
+      <pose relative_to='thruster_4_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>0.001</mass>
+        <inertia>
+          <ixx>1e-05</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1e-05</iyy>
+          <iyz>0</iyz>
+          <izz>1e-05</izz>
+        </inertia>
+      </inertial>
+      <visual name="thruster_4_visual">
+        <pose> 0 0 0 0 0 0 </pose>
+        <geometry>
+            <cylinder>
+                <length>0.25</length>
+                <radius>0.2</radius>
+            </cylinder>
+        </geometry>
+        <material>
+            <ambient>0.1 0.1 0.1 1</ambient>
+            <diffuse>1 0 1 1</diffuse>
+            <specular>0 0 0 0</specular>
+            <emissive>0 0 0 1</emissive>
+        </material>
+      </visual>
+    </link>
+    <plugin filename="gz-sim-spacecraft-thruster-model-system" name="gz::sim::systems::SpacecraftThrusterModel">
+      <link_name>thruster_4</link_name>
+      <actuator_number>4</actuator_number>
+      <duty_cycle_frequency>10</duty_cycle_frequency>
+      <max_thrust>1.4</max_thrust>
+      <sub_topic>command/duty_cycle</sub_topic>
+    </plugin>
+
+    <!--5. Move Down-->
+    <joint name='thruster_5_joint' type='fixed'>
+      <pose relative_to='base_link'>0 0 0.5 0 0 -1.5708 </pose>
+      <parent>base_link</parent>
+      <child>thruster_5</child>
+      <axis>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+      </axis>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+        </ode>
+      </physics>
+    </joint>
+    <link name='thruster_5'>
+      <gravity>false</gravity>
+      <pose relative_to='thruster_5_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>0.001</mass>
+        <inertia>
+          <ixx>1e-05</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1e-05</iyy>
+          <iyz>0</iyz>
+          <izz>1e-05</izz>
+        </inertia>
+      </inertial>
+      <visual name="thruster_5_visual">
+        <pose> 0 0 0 0 0 0 </pose>
+        <geometry>
+            <cylinder>
+                <length>0.25</length>
+                <radius>0.2</radius>
+            </cylinder>
+        </geometry>
+        <material>
+            <ambient>0.1 0.1 0.1 1</ambient>
+            <diffuse>1 1 0 1</diffuse>
+            <specular>0 0 0 0</specular>
+            <emissive>0 0 0 1</emissive>
+        </material>
+      </visual>
+    </link>
+    <plugin filename="gz-sim-spacecraft-thruster-model-system" name="gz::sim::systems::SpacecraftThrusterModel">
+      <link_name>thruster_5</link_name>
+      <actuator_number>5</actuator_number>
+      <duty_cycle_frequency>10</duty_cycle_frequency>
+      <max_thrust>1.4</max_thrust>
+      <sub_topic>command/duty_cycle</sub_topic>
+    </plugin>
+</model>
+</sdf>

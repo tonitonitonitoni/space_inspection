@@ -1,0 +1,793 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sdf version='1.9'>
+<!-- uses joint trajectory controller for the arm joints -->
+  <model name='free_flyer_with_arm'>
+    <link name='base_link'>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>60</mass>
+        <inertia>
+          <ixx>100</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>100</iyy>
+          <iyz>0</iyz>
+          <izz>100</izz>
+        </inertia>
+      </inertial>
+      <collision name='base_link_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1 1 1</size>
+          </box>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>100000</kp>
+              <kd>100000</kd>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+              <fdir1>0 0 1</fdir1>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='base_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+            <box>
+                <size>1 1 1</size>
+            </box>
+        </geometry>
+      </visual>
+    </link>
+
+    <!-- 0 : Move Left -->
+    <joint name='thruster_0_joint' type='fixed'>
+      <pose relative_to='base_link'>0 -0.5 0 -1.5708 0 0</pose>
+      <parent>base_link</parent>
+      <child>thruster_0</child>
+      <axis>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+      </axis>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+        </ode>
+      </physics>
+    </joint>
+    <link name='thruster_0'>
+      <pose relative_to='thruster_0_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>0.001</mass>
+        <inertia>
+          <ixx>1e-05</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1e-05</iyy>
+          <iyz>0</iyz>
+          <izz>1e-05</izz>
+        </inertia>
+      </inertial>
+      <visual name="thruster_0_visual">
+        <pose> 0 0 0 0 0 0 </pose>
+        <geometry>
+            <cylinder>
+                <length>0.25</length>
+                <radius>0.2</radius>
+            </cylinder>
+        </geometry>
+        <material>
+            <ambient>0.1 0.1 0.1 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+            <specular>0 0 0 0</specular>
+            <emissive>0 0 0 1</emissive>
+        </material>
+      </visual>
+    </link>
+    <plugin filename="gz-sim-spacecraft-thruster-model-system" name="gz::sim::systems::SpacecraftThrusterModel">
+      <link_name>thruster_0</link_name>
+      <actuator_number>0</actuator_number>
+      <duty_cycle_frequency>10</duty_cycle_frequency>
+      <max_thrust>1.4</max_thrust>
+      <topic>base_thrust</topic>
+      <sub_topic>command/duty_cycle</sub_topic>
+    </plugin>
+
+    <!--1: Move Right -->
+    <joint name='thruster_1_joint' type='fixed'>
+      <pose relative_to='base_link'>0 0.5 0 1.5708 0 0</pose>
+      <parent>base_link</parent>
+      <child>thruster_1</child>
+      <axis>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+      </axis>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+        </ode>
+      </physics>
+    </joint>
+    <link name='thruster_1'>
+      
+      <pose relative_to='thruster_1_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>0.001</mass>
+        <inertia>
+          <ixx>1e-05</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1e-05</iyy>
+          <iyz>0</iyz>
+          <izz>1e-05</izz>
+        </inertia>
+      </inertial>
+      <visual name="thruster_1_visual">
+        <pose> 0 0 0 0 0 0 </pose>
+        <geometry>
+            <cylinder>
+                <length>0.25</length>
+                <radius>0.2</radius>
+            </cylinder>
+        </geometry>
+        <material>
+            <ambient>0.1 0.1 0.1 1</ambient>
+            <diffuse>0 1 0 1</diffuse>
+            <specular>0 0 0 0</specular>
+            <emissive>0 0 0 1</emissive>
+        </material>
+      </visual>
+    </link>
+    <plugin filename="gz-sim-spacecraft-thruster-model-system" name="gz::sim::systems::SpacecraftThrusterModel">
+      <link_name>thruster_1</link_name>
+      <actuator_number>1</actuator_number>
+      <duty_cycle_frequency>10</duty_cycle_frequency>
+      <max_thrust>1.4</max_thrust>
+      <topic>base_thrust</topic>
+      <sub_topic>command/duty_cycle</sub_topic>
+    </plugin>
+
+    <!--2: Move Forward -->
+    <joint name='thruster_2_joint' type='fixed'>
+      <pose relative_to='base_link'>0.5 0 0 0 -1.5708 0</pose>
+      <parent>base_link</parent>
+      <child>thruster_2</child>
+      <axis>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+      </axis>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+        </ode>
+      </physics>
+    </joint>
+    <link name='thruster_2'>
+      
+      <pose relative_to='thruster_2_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>0.001</mass>
+        <inertia>
+          <ixx>1e-05</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1e-05</iyy>
+          <iyz>0</iyz>
+          <izz>1e-05</izz>
+        </inertia>
+      </inertial>
+      <visual name="thruster_2_visual">
+        <pose> 0 0 0 0 0 0 </pose>
+        <geometry>
+            <cylinder>
+                <length>0.25</length>
+                <radius>0.2</radius>
+            </cylinder>
+        </geometry>
+        <material>
+            <ambient>0.1 0.1 0.1 1</ambient>
+            <diffuse>0 0 1 1</diffuse>
+            <specular>0 0 0 0</specular>
+            <emissive>0 0 0 1</emissive>
+        </material>
+      </visual>
+    </link>
+    <plugin filename="gz-sim-spacecraft-thruster-model-system" name="gz::sim::systems::SpacecraftThrusterModel">
+      <link_name>thruster_2</link_name>
+      <actuator_number>2</actuator_number>
+      <duty_cycle_frequency>10</duty_cycle_frequency>
+      <max_thrust>1.4</max_thrust>
+      <topic>base_thrust</topic>
+      <sub_topic>command/duty_cycle</sub_topic>
+    </plugin>
+
+    <!--3. Move Backward-->
+    <joint name='thruster_3_joint' type='fixed'>
+      <pose relative_to='base_link'>-0.5 0 0 0 1.5708 0</pose>
+      <parent>base_link</parent>
+      <child>thruster_3</child>
+      <axis>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+      </axis>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+        </ode>
+      </physics>
+    </joint>
+    <link name='thruster_3'>
+      
+      <pose relative_to='thruster_3_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>0.001</mass>
+        <inertia>
+          <ixx>1e-05</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1e-05</iyy>
+          <iyz>0</iyz>
+          <izz>1e-05</izz>
+        </inertia>
+      </inertial>
+      <visual name="thruster_3_visual">
+        <pose> 0 0 0 0 0 0 </pose>
+        <geometry>
+            <cylinder>
+                <length>0.25</length>
+                <radius>0.2</radius>
+            </cylinder>
+        </geometry>
+        <material>
+            <ambient>0.1 0.1 0.1 1</ambient>
+            <diffuse>0 1 1 1</diffuse>
+            <specular>0 0 0 0</specular>
+            <emissive>0 0 0 1</emissive>
+        </material>
+      </visual>
+    </link>
+    <plugin filename="gz-sim-spacecraft-thruster-model-system" name="gz::sim::systems::SpacecraftThrusterModel">
+      <link_name>thruster_3</link_name>
+      <actuator_number>3</actuator_number>
+      <duty_cycle_frequency>10</duty_cycle_frequency>
+      <max_thrust>1.4</max_thrust>
+      <topic>base_thrust</topic>
+      <sub_topic>command/duty_cycle</sub_topic>
+    </plugin>
+
+    <!--Arm stuff-->
+    <joint name='arm_base_joint' type='revolute'>
+      <pose relative_to='base_link'>0 0 0.5 0 0 1.5708</pose>
+      <parent>base_link</parent>
+      <child>arm_base</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+            <limit>
+              <effort>10000.0</effort>
+              <velocity>1.0</velocity>
+              <lower>-3.14</lower>    
+              <upper>3.14</upper>     
+          </limit>
+      </axis>
+    </joint>
+    <plugin
+      filename="gz-sim-joint-controller-system"
+      name="gz::sim::systems::JointController">
+      <joint_name>arm_base_joint</joint_name>
+      <initial_velocity>0</initial_velocity>
+      <topic>arm_base_joint</topic>
+    </plugin>
+    
+    <!-- Arm Links -->
+        <link name="arm_base">
+          <pose relative_to="arm_base_joint">0 0 0 0 0 0</pose>
+            <visual name="arm_base_link_visual">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/visual/ur5/base.dae</uri>
+                    </mesh>
+                </geometry>
+            </visual>
+            <collision name="arm_base_link_collision">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/collision/ur5/base.stl</uri>
+                    </mesh>
+                </geometry>
+                <surface>
+                    <friction>
+                        <ode>
+                            <mu>1.2</mu>
+                            <mu2>1.2</mu2>
+                        </ode>
+                    </friction>
+                </surface>
+            </collision>
+            <inertial>
+                <pose>0 0 5 0 0 0</pose>
+                <mass>4.210389694173812</mass>
+                <inertia>
+                    <ixx>0.09309670560602573</ixx>
+                    <iyy>0.09257037651287492</iyy>
+                    <izz>0.004310645613985299</izz>
+                    <ixy>5.711270872759674e-09</ixy>
+                    <ixz>2.0039833861772347e-07</ixz>
+                    <iyz>0.0047053532779924665</iyz>
+                </inertia>
+            </inertial>
+        </link>
+
+        <link name="shoulder_link">
+            <pose relative_to="shoulder_pan_joint">0 0 0 0 0 0</pose>
+            <visual name="shoulder_link_visual">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/visual/ur5/shoulder.dae</uri>
+                    </mesh>
+                </geometry>
+            </visual>
+            <collision name="shoulder_link_collision">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/collision/ur5/shoulder.stl</uri>
+                    </mesh>
+                </geometry>
+                <surface>
+                    <friction>
+                        <ode>
+                            <mu>1.2</mu>
+                            <mu2>1.2</mu2>
+                        </ode>
+                    </friction>
+                </surface>
+            </collision>
+            <inertial>
+                <pose>-3.81853e-06 0.00927291 -0.0018563 0 0 0</pose>
+                <mass>2.6078628081050645</mass>
+                <inertia>
+                    <ixx>0.00615890739477387</ixx>
+                    <iyy>0.005562932983198189</iyy>
+                    <izz>0.005255082470414319</izz>
+                    <ixy>8.486678716437087e-07</ixy>
+                    <ixz>1.436028981488676e-07</ixz>
+                    <iyz>-0.00018809980689883695</iyz>
+                </inertia>
+            </inertial>
+        </link>
+        <link name="upper_arm_link">
+            <pose relative_to="shoulder_lift_joint">0 0 0 0 0 0</pose>
+            <visual name="upper_arm_link_visual">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/visual/ur5/upperarm.dae</uri>
+                    </mesh>
+                </geometry>
+            </visual>
+            <collision name="upper_arm_link_collision">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/collision/ur5/upperarm.stl</uri>
+                    </mesh>
+                </geometry>
+                <surface>
+                    <friction>
+                        <ode>
+                            <mu>1.2</mu>
+                            <mu2>1.2</mu2>
+                        </ode>
+                    </friction>
+                </surface>
+            </collision>
+            <inertial>
+                <pose>9.68139e-10 -0.00107158 0.2125 0 0 0</pose>
+                <mass>9.034556202946057</mass>
+                <inertia>
+                    <ixx>0.2566537454248199</ixx>
+                    <iyy>0.25483850258961777</iyy>
+                    <izz>0.016022276702360172</izz>
+                    <ixy>-2.2173460061911962e-09</ixy>
+                    <ixz>2.3397723734924104e-06</ixz>
+                    <iyz>5.701897149736449e-09</iyz>
+                </inertia>
+            </inertial>
+        </link>
+        <link name="forearm_link">
+            <pose relative_to="elbow_joint">0 0 0 0 0 0</pose>
+            <visual name="forearm_link_visual">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/visual/ur5/forearm.dae</uri>
+                    </mesh>
+                </geometry>
+            </visual>
+            <collision name="forearm_link_collision">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/collision/ur5/forearm.stl</uri>
+                    </mesh>
+                </geometry>
+                <surface>
+                    <friction>
+                        <ode>
+                            <mu>1.2</mu>
+                            <mu2>1.2</mu2>
+                        </ode>
+                    </friction>
+                </surface>
+            </collision>
+            <inertial>
+                <pose>-7.83914e-07 0.00442178 0.184343 0 0 0</pose>
+                <mass>4.210389694173812</mass>
+                <inertia>
+                    <ixx>0.09309670560602573</ixx>
+                    <iyy>0.09257037651287492</iyy>
+                    <izz>0.004310645613985299</izz>
+                    <ixy>5.711270872759674e-09</ixy>
+                    <ixz>2.0039833861772347e-07</ixz>
+                    <iyz>0.0047053532779924665</iyz>
+                </inertia>
+            </inertial>
+        </link>
+        <link name="wrist_1_link">
+            <pose relative_to="wrist_1_joint">0 0 0 0 0 0</pose>
+            <visual name="wrist_1_link_visual">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/visual/ur5/wrist1.dae</uri>
+                    </mesh>
+                </geometry>
+            </visual>
+            <collision name="wrist_1_link_collision">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/collision/ur5/wrist1.stl</uri>
+                    </mesh>
+                </geometry>
+                <surface>
+                    <friction>
+                        <ode>
+                            <mu>1.2</mu>
+                            <mu2>1.2</mu2>
+                        </ode>
+                    </friction>
+                </surface>
+            </collision>
+            <inertial>
+                <pose>2.12195e-06 0.0886236 -0.00357675 0 0 0</pose>
+                <mass>0.8652783044597422</mass>
+                <inertia>
+                    <ixx>0.0011006744464830784</ixx>
+                    <iyy>0.0010246557119841899</iyy>
+                    <izz>0.0007125213984803068</izz>
+                    <ixy>-4.062057055066431e-08</ixy>
+                    <ixz>-2.441133081746347e-08</ixz>
+                    <iyz>1.000924524333879e-05</iyz>
+                </inertia>
+            </inertial>
+        </link>
+        <link name="wrist_2_link">
+            <pose relative_to="wrist_2_joint">0 0 0 0 0 0</pose>
+            <visual name="wrist_2_link_visual">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/visual/ur5/wrist2.dae</uri>
+                    </mesh>
+                </geometry>
+            </visual>
+            <collision name="wrist_2_link_collision">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/collision/ur5/wrist2.stl</uri>
+                    </mesh>
+                </geometry>
+                <surface>
+                    <friction>
+                        <ode>
+                            <mu>1.2</mu>
+                            <mu2>1.2</mu2>
+                        </ode>
+                    </friction>
+                </surface>
+            </collision>
+            <inertial>
+                <pose>-2.12306e-06 -0.00357678 0.0901045 0 0 0</pose>
+                <mass>0.8652786866955592</mass>
+                <inertia>
+                    <ixx>0.0010980920821000012</ixx>
+                    <iyy>0.0007099378137563144</iyy>
+                    <izz>0.0010246570857519936</izz>
+                    <ixy>2.436032506659575e-08</ixy>
+                    <ixz>4.047086050601145e-08</ixz>
+                    <iyz>4.96085194908414e-06</iyz>
+                </inertia>
+            </inertial>
+        </link>
+        <link name="wrist_3_link">
+            <pose relative_to="wrist_3_joint">0 0 0 0 0 0</pose>
+            <visual name="wrist_3_link_visual">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/visual/ur5/wrist3.dae</uri>
+                    </mesh>
+                </geometry>
+            </visual>
+            <collision name="wrist_3_link_collision">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/collision/ur5/wrist3.stl</uri>
+                    </mesh>
+                </geometry>
+                <surface>
+                    <friction>
+                        <ode>
+                            <mu>1.2</mu>
+                            <mu2>1.2</mu2>
+                        </ode>
+                    </friction>
+                </surface>
+            </collision>
+            <inertial>
+                <pose>8.12548e-09 0.0630914 0.000189932 0 0 0</pose>
+                <mass>0.23285976783205536</mass>
+                <inertia>
+                    <ixx>0.00010068520800989181</ixx>
+                    <iyy>0.00016016377462915846</iyy>
+                    <izz>9.951199288758246e-05</izz>
+                    <ixy>-1.3195380569038253e-11</ixy>
+                    <ixz>2.0466677535340047e-11</ixz>
+                    <iyz>3.421454203362164e-08</iyz>
+                </inertia>
+            </inertial>
+        </link>
+
+        <!-- Arm Joints -->
+        <joint name="shoulder_pan_joint" type="revolute">
+            <pose relative_to="arm_base">0 0 0.089159 0 0 0</pose>
+            <parent>base_link</parent>
+            <child>shoulder_link</child>
+            <axis>
+                <xyz>0 0 1</xyz>
+                <limit>
+                    <effort>150</effort>
+                    <lower>-6.28319</lower>
+                    <upper>6.28319</upper>
+                    <velocity>3.15</velocity>
+                </limit>
+                <dynamics>
+                    <spring_reference>0</spring_reference>
+                    <spring_stiffness>0</spring_stiffness>
+                    <damping>30</damping>
+                    <friction>4</friction>
+                </dynamics>
+            </axis>
+        </joint>
+
+        <joint name="shoulder_lift_joint" type="revolute">
+            <pose relative_to="shoulder_link">0 0.13585 0 0 0 0</pose>
+            <parent>shoulder_link</parent>
+            <child>upper_arm_link</child>
+            <axis>
+                <xyz>0 1 0</xyz>
+                <limit>
+                    <effort>150</effort>
+                    <lower>-6.28319</lower>
+                    <upper>6.28319</upper>
+                    <velocity>3.15</velocity>
+                </limit>
+                <dynamics>
+                    <spring_reference>0</spring_reference>
+                    <spring_stiffness>0</spring_stiffness>
+                    <damping>45</damping>
+                    <friction>6</friction>
+                </dynamics>
+            </axis>
+        </joint>
+        
+        <joint name="elbow_joint" type="revolute">
+            <pose relative_to="upper_arm_link">0 -0.1197 0.425 0 0 0</pose>
+            <parent>upper_arm_link</parent>
+            <child>forearm_link</child>
+            <axis>
+                <xyz>0 1 0</xyz>
+                <limit>
+                    <effort>150</effort>
+                    <lower>-6.28319</lower>
+                    <upper>6.28319</upper>
+                    <velocity>3.15</velocity>
+                </limit>
+                <dynamics>
+                    <spring_reference>0</spring_reference>
+                    <spring_stiffness>0</spring_stiffness>
+                    <damping>35</damping>
+                    <friction>5</friction>
+                </dynamics>
+            </axis>
+        </joint>
+        <joint name="wrist_1_joint" type="revolute">
+            <pose relative_to="forearm_link">0 0 0.39225 0 0 0</pose>
+            <parent>forearm_link</parent>
+            <child>wrist_1_link</child>
+            <axis>
+                <xyz>0 1 0</xyz>
+                <limit>
+                    <effort>28</effort>
+                    <lower>-6.28319</lower>
+                    <upper>6.28319</upper>
+                    <velocity>3.2</velocity>
+                </limit>
+                <dynamics>
+                    <spring_reference>0</spring_reference>
+                    <spring_stiffness>0</spring_stiffness>
+                    <damping>25</damping>
+                    <friction>3.5</friction>
+                </dynamics>
+            </axis>
+        </joint>
+        <joint name="wrist_2_joint" type="revolute">
+            <pose relative_to="wrist_1_link">0 0.093 0 0 0 0</pose>
+            <parent>wrist_1_link</parent>
+            <child>wrist_2_link</child>
+            <axis>
+                <xyz>0 0 1</xyz>
+                <limit>
+                    <effort>28</effort>
+                    <lower>-6.28319</lower>
+                    <upper>6.28319</upper>
+                    <velocity>3.2</velocity>
+                </limit>
+                <dynamics>
+                    <spring_reference>0</spring_reference>
+                    <spring_stiffness>0</spring_stiffness>
+                    <damping>20</damping>
+                    <friction>2.5</friction>
+                </dynamics>
+            </axis>
+        </joint>
+        <joint name="wrist_3_joint" type="revolute">
+            <pose relative_to="wrist_2_link">0 0 0.09465 0 0 0</pose>
+            <parent>wrist_2_link</parent>
+            <child>wrist_3_link</child>
+            <axis>
+                <xyz>0 1 0</xyz>
+                <limit>
+                    <effort>28</effort>
+                    <lower>-6.28319</lower>
+                    <upper>6.28319</upper>
+                    <velocity>3.2</velocity>
+                </limit>
+                <dynamics>
+                    <spring_reference>0</spring_reference>
+                    <spring_stiffness>0</spring_stiffness>
+                    <damping>15</damping>
+                    <friction>1.75</friction>
+                </dynamics>
+            </axis>
+        </joint>
+         <plugin
+            filename="gz-sim-joint-trajectory-controller-system"
+            name="gz::sim::systems::JointTrajectoryController">
+            <joint_name>arm_base_joint</joint_name>
+            <initial_position>0</initial_position>
+            <position_p_gain>20</position_p_gain>
+            <position_i_gain>0.4</position_i_gain>
+            <position_d_gain>1.0</position_d_gain>
+            <position_i_min>-1</position_i_min>
+            <position_i_max>1</position_i_max>
+            <position_cmd_min>-20</position_cmd_min>
+            <position_cmd_max>20</position_cmd_max>
+            
+            <joint_name>shoulder_pan_joint</joint_name>
+            <initial_position>0</initial_position>
+            <position_p_gain>20</position_p_gain>
+            <position_i_gain>0.4</position_i_gain>
+            <position_d_gain>1.0</position_d_gain>
+            <position_i_min>-1</position_i_min>
+            <position_i_max>1</position_i_max>
+            <position_cmd_min>-20</position_cmd_min>
+            <position_cmd_max>20</position_cmd_max>
+            
+            <joint_name>shoulder_lift_joint</joint_name>
+            <initial_position>0</initial_position>
+            <position_p_gain>10</position_p_gain>
+            <position_i_gain>0.2</position_i_gain>
+            <position_d_gain>0.5</position_d_gain>
+            <position_i_min>-1</position_i_min>
+            <position_i_max>1</position_i_max>
+            <position_cmd_min>-10</position_cmd_min>
+            <position_cmd_max>10</position_cmd_max>
+
+            <joint_name>elbow_joint</joint_name>
+            <initial_position>0</initial_position>
+            <position_p_gain>10</position_p_gain>
+            <position_i_gain>0.2</position_i_gain>
+            <position_d_gain>0.5</position_d_gain>
+            <position_i_min>-1</position_i_min>
+            <position_i_max>1</position_i_max>
+            <position_cmd_min>-10</position_cmd_min>
+            <position_cmd_max>10</position_cmd_max>
+
+            <joint_name>wrist_1_joint</joint_name>
+            <initial_position>0</initial_position>
+            <position_p_gain>10</position_p_gain>
+            <position_i_gain>0.2</position_i_gain>
+            <position_d_gain>0.5</position_d_gain>
+            <position_i_min>-1</position_i_min>
+            <position_i_max>1</position_i_max>
+            <position_cmd_min>-10</position_cmd_min>
+            <position_cmd_max>10</position_cmd_max>
+
+            <joint_name>wrist_2_joint</joint_name>
+            <initial_position>0</initial_position>
+            <position_p_gain>10</position_p_gain>
+            <position_i_gain>0.2</position_i_gain>
+            <position_d_gain>0.5</position_d_gain>
+            <position_i_min>-1</position_i_min>
+            <position_i_max>1</position_i_max>
+            <position_cmd_min>-10</position_cmd_min>
+            <position_cmd_max>10</position_cmd_max>
+
+            <joint_name>wrist_3_joint</joint_name>
+            <initial_position>0</initial_position>
+            <position_p_gain>10</position_p_gain>
+            <position_i_gain>0.2</position_i_gain>
+            <position_d_gain>0.5</position_d_gain>
+            <position_i_min>-1</position_i_min>
+            <position_i_max>1</position_i_max>
+            <position_cmd_min>-10</position_cmd_min>
+            <position_cmd_max>10</position_cmd_max>
+          </plugin>
+
+</model>
+</sdf>

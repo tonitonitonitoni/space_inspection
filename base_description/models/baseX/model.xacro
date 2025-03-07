@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sdf version='1.9'>
+    <model name='free_flyer' xmlns:xacro="http://www.ros.org/wiki/xacro">
+        <xacro:property name="base_length" value="1"/>
+        <xacro:property name="base_width" value="1"/>
+        <xacro:property name="base_height" value="1"/>
+        <xacro:property name="base_mass" value="5"/>
+        <xacro:property name="thruster_mass" value="0.001"/>
+        <xacro:include filename="macros.xacro" />
+
+        <xacro:base/>
+        <!--move left which is -y -->
+        <xacro:thruster mass="${thruster_mass}" number="0" pose_x="0.3" pose_y="-0.5" pose_r="-1.5708" pose_p="0"/>
+        <xacro:thruster mass="${thruster_mass}" number="1" pose_x="-0.3" pose_y="-0.5" pose_r="-1.5708" pose_p="0"/>
+        
+        <!-- move right which is +y -->
+        <xacro:thruster mass="${thruster_mass}" number="2" pose_x="0.3" pose_y="0.5" pose_r="1.5708" pose_p="0"/>
+        <xacro:thruster mass="${thruster_mass}" number="3" pose_x="-0.3" pose_y="0.5" pose_r="1.5708" pose_p="0"/>
+
+        <!-- move fwd which is +x -->
+        <xacro:thruster mass="${thruster_mass}" number="4" pose_x="0.5" pose_y="0.3" pose_p="-1.5708" pose_r="0"/>
+        <xacro:thruster mass="${thruster_mass}" number="5" pose_x="0.5" pose_y="-0.3" pose_p="-1.5708" pose_r="0"/>
+
+        <!-- move back which is -x --> 
+        <xacro:thruster mass="${thruster_mass}" number="6" pose_x="-0.5" pose_y="0.3" pose_p="1.5708" pose_r="0"/>
+        <xacro:thruster mass="${thruster_mass}" number="7" pose_x="-0.5" pose_y="-0.3" pose_p="1.5708" pose_r="0"/>
+        
+        <plugin
+            filename="gz-sim-odometry-publisher-system"
+            name="gz::sim::systems::OdometryPublisher">
+            <robot_base_frame>base_link</robot_base_frame>
+            <dimensions>2</dimensions>
+        </plugin>
+
+        <xacro:include filename="arm.xacro" />
+    </model>
+</sdf>

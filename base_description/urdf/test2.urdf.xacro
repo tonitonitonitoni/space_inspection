@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<robot name="free_flyer" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:property name="side_length" value="0.4" />
+<xacro:property name="height" value="0.8"/>
+<xacro:property name="thruster_offset" value="0.1"/>
+
+    <material name="blue">
+        <color rgba="0 0 0.8 1"/>
+    </material>
+
+    <material name="white">
+        <color rgba="1 1 1 1"/>
+    </material>
+
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <box size="${side_length} ${side_length} ${height}"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 ${height/2}"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${side_length} ${side_length} ${height}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="10"/>
+            <inertia ixx="1e-3" ixy="0.0" ixz="0.0" iyy="1e-3" iyz="0.0" izz="1e-3"/>
+        </inertial>
+    </link>
+<!-- Thrusters -->
+<xacro:include filename="thruster.xacro"/>
+    <xacro:thruster number="0">
+        <origin xyz="${thruster_offset} -${side_length/2} ${height/2}" rpy="-1.5708 0 0"/>
+    </xacro:thruster>
+    <xacro:thruster number="1">
+        <origin xyz="-${thruster_offset} -${side_length/2} ${height/2}" rpy="-1.5708 0 0"/>
+    </xacro:thruster>
+    <xacro:thruster number="2">
+        <origin xyz="${thruster_offset} ${side_length/2} ${height/2}" rpy="1.5708 0 0"/>
+    </xacro:thruster>
+    <xacro:thruster number="3">
+        <origin xyz="-${thruster_offset} ${side_length/2} ${height/2}" rpy="1.5708 0 0"/>
+    </xacro:thruster>
+    <xacro:thruster number="4">
+        <origin xyz="${side_length/2} ${thruster_offset} ${height/2}" rpy="0 -1.5708 0"/>
+    </xacro:thruster>
+    <xacro:thruster number="5">
+        <origin xyz="${side_length/2} -${thruster_offset} ${height/2}" rpy="0 -1.5708 0"/>
+    </xacro:thruster>
+    <xacro:thruster number="6">
+        <origin xyz="-${side_length/2} ${thruster_offset} ${height/2}" rpy="0 1.5708 0"/>
+    </xacro:thruster>
+    <xacro:thruster number="7">
+        <origin xyz="-${side_length/2} -${thruster_offset} ${height/2}" rpy="0 1.5708 0"/>
+    </xacro:thruster>
+
+<!-- Arm -->
+    <joint name="arm_base" type="fixed">
+        <origin xyz="0 0 ${height}" rpy="0 0 0"/>
+        <parent link="base_link"/>
+        <child link="link1"/>
+    </joint>
+    <xacro:include filename="open_half.urdf.xacro"/>
+
+<!-- Gazebo tags -->
+
+    <gazebo reference="base_link">
+        <gravity>true</gravity>
+        <mu1>0.0</mu1>
+        <mu2>0.0</mu2>
+        <fdir1>0 0 1</fdir1>
+    </gazebo>
+    <gazebo>
+        <plugin
+            filename="gz-sim-odometry-publisher-system"
+            name="gz::sim::systems::OdometryPublisher">
+            <robot_base_frame>base_link</robot_base_frame>
+            <dimensions>2</dimensions>
+        </plugin>    
+
+        <plugin filename="gz-sim-joint-trajectory-controller-system" name="gz::sim::systems::JointTrajectoryController">
+
+        <joint_name>joint1</joint_name>
+        <initial_position>0</initial_position>
+        <position_p_gain>20</position_p_gain>
+        <position_i_gain>0.4</position_i_gain>
+        <position_d_gain>1.0</position_d_gain>
+        <position_i_min>-1</position_i_min>
+        <position_i_max>1</position_i_max>
+        <position_cmd_min>-10</position_cmd_min>
+        <position_cmd_max>10</position_cmd_max>
+
+        <joint_name>joint2</joint_name>
+        <initial_position>0</initial_position>
+        <position_p_gain>20</position_p_gain>
+        <position_i_gain>0.4</position_i_gain>
+        <position_d_gain>1.0</position_d_gain>
+        <position_i_min>-1</position_i_min>
+        <position_i_max>1</position_i_max>
+        <position_cmd_min>-10</position_cmd_min>
+        <position_cmd_max>10</position_cmd_max>
+
+        <joint_name>joint3</joint_name>
+        <initial_position>0</initial_position>
+        <position_p_gain>10</position_p_gain>
+        <position_i_gain>0.2</position_i_gain>
+        <position_d_gain>0.5</position_d_gain>
+        <position_i_min>-1</position_i_min>
+        <position_i_max>1</position_i_max>
+        <position_cmd_min>-10</position_cmd_min>
+        <position_cmd_max>10</position_cmd_max>
+
+        <joint_name>joint4</joint_name>
+        <initial_position>0</initial_position>
+        <position_p_gain>10</position_p_gain>
+        <position_i_gain>0.2</position_i_gain>
+        <position_d_gain>0.5</position_d_gain>
+        <position_i_min>-1</position_i_min>
+        <position_i_max>1</position_i_max>
+        <position_cmd_min>-10</position_cmd_min>
+        <position_cmd_max>10</position_cmd_max>
+      </plugin>
+      <plugin filename="gz-sim-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher">
+      <topic>joint_states</topic>
+      <joint_name>joint1</joint_name>
+      <joint_name>joint2</joint_name>
+      <joint_name>joint3</joint_name>
+      <joint_name>joint4</joint_name>
+      </plugin>
+
+    </gazebo>
+    
+
+</robot>
