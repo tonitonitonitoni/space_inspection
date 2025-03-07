@@ -12,7 +12,7 @@ class OdometryVelocityController(Node):
         # Subscriber for odometry
         self.odom_subscriber = self.create_subscription(
             Odometry,
-            'model/free_flyer/odometry',  # Change to the appropriate topic name
+            'model/free_flyer/odometry',  
             self.odom_callback,
             10  # QoS History Depth
         )
@@ -20,14 +20,14 @@ class OdometryVelocityController(Node):
         # Publisher for velocity control
         self.vel_publisher = self.create_publisher(
             Actuators,
-            '/base/command/duty_cycle',  # Change to the appropriate topic name
+            '/base/command/duty_cycle',  
             10  # QoS History Depth
         )
 
         # Subscriber for cmd_vel
         self.cmd_vel_subscriber = self.create_subscription(
             Twist,
-            '/cmd_vel',  # Change to the appropriate topic name
+            '/cmd_vel',  
             self.cmd_vel_callback,
             10  # QoS History Depth
         )
@@ -35,7 +35,7 @@ class OdometryVelocityController(Node):
         self.get_logger().info("Odometry Velocity Controller node started")
 
     def cmd_vel_callback(self, msg: Twist):
-        # Received cmd_vel, here you can implement how to process the velocity commands
+        
         linear_velocity_x_cmd = msg.linear.x
         linear_velocity_y_cmd = msg.linear.y
         angular_velocity_cmd = msg.angular.z
